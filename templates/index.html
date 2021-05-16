@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Hungarian Algorithm Visualizer</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    >
+    <link href="https://fonts.googleapis.com/css?family=Cinzel:700,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/utils.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
+  </head>
+  <body class="mainPage">
+    <form>
+      <div class="form-group">
+        <label for="input-area">Input:</label>
+        <textarea class="form-control" id="input-area" rows="8">
+          3 3 
+    7 3 4
+    8 8 2
+    7 3 1</textarea>
+      </div>
+      <button type="submit" class="btn btn-primary mb-2" onclick="event.preventDefault(); submit_input();">Start</button>
+    </form>
+    <svg width="1000" height="1000">
+      <g id="graph"></g>
+    </svg>
+  </body>
+</html>

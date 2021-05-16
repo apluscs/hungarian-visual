@@ -1,0 +1,7 @@
+runtime: python39 
+
+handlers:
+# Matches requests to /images/... to files in static/images/...
+
+- url: /.*
+  static_dir: index.html
