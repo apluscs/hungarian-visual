@@ -76,7 +76,8 @@ def calc_states(n, m, wts):  # fills in states
       if len(path) == 0:
         continue
       augment(path)
-      states.append(State.AP_State(State.TYPE.FOUND_AP, path).serialize())
+      path.reverse()
+      states.append(State.AP_State(State.TYPE.FOUND_AP, lab, partner, path).serialize())
       return True
     return False
 
@@ -98,12 +99,13 @@ def calc_states(n, m, wts):  # fills in states
     for i in range(n, N):
       if T[i]:
         lab[i] += d
+    return d
 
   states.append(State.Def_State(State.TYPE.DEFAULT, lab, partner).serialize())
   while M < min(n, m) * 2:
     if not augment_matching():
-      update_labels()
-      states.append(State.Imp_Lab_State(State.TYPE.IMP_LAB, lab).serialize())
+      old_labels, d = lab[:], update_labels()
+      states.append(State.Imp_Lab_State(State.TYPE.IMP_LAB, old_labels, partner, lab, d).serialize())
   # print("partner= {}".format(partner))
   res = sum(wts[i][partner[i]] for i in range(n))
   # print("res= {}".format(res))
@@ -112,9 +114,13 @@ def calc_states(n, m, wts):  # fills in states
 
 @app.route('/hungarian', methods=['GET', 'POST'])
 def hungarian():
-  input = request.data.split()
+  BAD_JSON, input = jsonify(bad= True), request.data.split()
+  if len(input) < 2 or any(not i.isdigit() for i in input):
+    return BAD_JSON
   input = [int(i.decode('utf-8')) for i in input]
   n, m = input[0], input[1]
+  if len(input) != n*m + 2:
+    return BAD_JSON
   wts = [[0 for j in range(n + m)] for i in range(m + n)]
   for i in range(n):
     for j in range(m):
@@ -122,7 +128,7 @@ def hungarian():
   states = calc_states(n, m, wts)
   print("done")
   print(states)
-  return jsonify(n=n, m=m, wts=wts, states = states)
+  return jsonify(n=n, m=m, wts= [0]+ [[0] + wt for wt in wts], states = states, bad=False)
 
 
 if __name__ == '__main__':

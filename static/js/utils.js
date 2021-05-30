@@ -16,3 +16,9 @@ function setAttributes(el, attrs) {
     el.setAttribute(key, attrs[key]);
   }
 }
+
+const types = {
+  DEFAULT: 1,
+  FOUND_AP: 2,
+  IMP_LAB: 3
+};

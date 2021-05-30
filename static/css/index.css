@@ -1,4 +1,153 @@
-body {
+.side-margins {
   margin-left: 20%;
   margin-right: 20%;
+}
+#animated-path{
+   stroke-dasharray: 20;
+  -webkit-animation: draw 1s linear infinite;
+}
+
+@-webkit-keyframes draw{
+  to { stroke-dashoffset: 100;}
+}
+
+#splash-div{
+  background-image: url("circles2.jpg");
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  background-attachment: fixed;
+}
+html, body {
+  height: 100%;
+  font-family: 'Nanum Gothic', sans-serif;
+  scroll-behavior: smooth;
+}
+
+.row {
+  margin-right: 0;
+}
+
+#splash-text {
+  padding-right: 5%;
+  padding-left: 10%;
+}
+#splash-row{
+  padding-top: 10%;
+  height: 100%;
+  color: #E7D3CC;
+}
+
+#splash-head, #input-label {
+  font-size: 6em;
+  font-family: 'Alegreya Sans SC', sans-serif;
+}
+
+#splash-description {
+  font-size: 1.5em;
+  font-family: 'Nanum Gothic', sans-serif;
+}
+
+#input-label {
+  font-size: 1.5em;
+}
+
+#input-area {
+  background-color: #E7D3CC;
+  color: #1f0014;
+}
+
+
+#input-form {
+  padding-top: 5%;
+  padding-left: 10%;
+  padding-right: 20%;
+}
+
+#start-btn, #info-btn {
+  margin: auto;
+  box-shadow: none;
+  color: #E7D3CC;
+}
+
+#algo-div {
+  padding-top: 10vh;
+  background: #E7D3CC;
+}
+
+#ctrl-buttons-div {
+  display: flex;
+  justify-content: center;
+}
+
+#explanations-card {
+  width: 50%;
+  margin: auto;
+  color: #5e1647;
+  font-size: x-large;
+}
+
+.ctrl-btn {
+  color: #5e1647;
+  border: 0;
+  font-size: 2em;
+  background: none;
+  background-color: transparent;
+}
+
+.ctrl-btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+:root {
+  --graph_width: 20px;
+}
+
+#graph {
+  transform: translate(calc((50vw - var(--graph_width))/2), 0);
+}
+
+#input-modal {
+  color: #5e1647;
+
+}
+:focus {
+  outline:none !important;
+}
+.modal-body {
+  font-size: large;
+}
+
+#state-slider {
+  margin: auto;
+  display: block;
+  -webkit-appearance: none !important;
+  height: 20px;
+  background:#934474;
+  transition: all 0.3s ease;
+  border-radius: 10px;
+}
+
+#state-slider:hover {
+  opacity: 50%;
+}
+
+#state-slider ::-webkit-slider-thumb {
+  -webkit-appearance: none !important  ;
+  width: 20px;
+  height: 20px;
+  transition: all 0.5s ease;
+}
+
+.footer-btn {
+  color: #5e1647;
+  font-size: 2em;
+}
+
+#footer-hr {
+  margin: 0;
+  border: 2px solid #bd7f8a;;
 }

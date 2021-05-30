@@ -1,33 +1,165 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Hungarian Algorithm Visualizer</title>
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-      crossorigin="anonymous"
-    >
-    <link href="https://fonts.googleapis.com/css?family=Cinzel:700,900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
-    <script type="text/javascript" src="{{ url_for('static', filename='js/utils.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
-  </head>
-  <body class="mainPage">
-    <form>
-      <div class="form-group">
-        <label for="input-area">Input:</label>
-        <textarea class="form-control" id="input-area" rows="8">
-          3 3 
-    7 3 4
-    8 8 2
-    7 3 1</textarea>
+
+<head>
+  <meta charset="utf-8">
+  <title>Hungarian Algorithm Visualizer</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Cinzel:700,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Alegreya+Sans+SC:wght@500&family=Nanum+Gothic:wght@700&display=swap"
+    rel="stylesheet">
+  <script type="text/javascript" src="{{ url_for('static', filename='js/utils.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
+
+</head>
+
+<body class="mainPage">
+  <div id="splash-div">
+    <div class="row" id="splash-row">
+      <div class="col-6" id="splash-text">
+        <h1 class="display-4" id="splash-head">Hungarian Algorithm Simulator</h1>
+        <p class="lead" id="splash-description">Graphical simulation of the Hungarian Algorithm. Solves maximum
+          value perfect matching. Start by giving me the input!</p>
       </div>
-      <button type="submit" class="btn btn-primary mb-2" onclick="event.preventDefault(); submit_input();">Start</button>
-    </form>
-    <svg width="1000" height="1000">
-      <g id="graph"></g>
-    </svg>
-  </body>
+      <form class="col-6" id="input-form">
+        <div class="form-group">
+          <label id="input-label" for="input-area">Input
+            <button class="btn" id="info-btn" type="button" data-toggle="modal" data-target="#input-modal">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="#E7D3CC" width="20" height="20" class="bi bi-info-circle"
+                viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                <path
+                  d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+              </svg>
+            </button>
+          </label>
+          <div class="modal fade bd-example-modal-lg" id="input-modal" tabindex="-1" role="dialog"
+            aria-labelledby="input-modal-title" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h3 class="modal-title" id="input-modal-title">How to Input Your Graph</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                  The first line should contain two positive integers: the number of nodes in the left subgraph (n) and the right
+                  subgraph (m) respectively. They should be space-separated, as with everything else in the input.
+                  <br>
+                  Then, the adjacency matrix should come next: the next n lines should contain m integers each, where the
+                  j<sup>th</sup> number in the i<sup>th</sup> line is the weight of the edge from the i<sup>th</sup>
+                  vertex in the left subgraph to the j<sup>th</sup> vertex in the right subgraph. If there is no edge
+                  between two vertices in your graph, give that edge a weight of 0. All numbers should be in the range [0, 2<sup>31</sup>).
+                  <br><br>
+                  <p class="lead">
+                    To represent this graph:
+                  </p>
+                  <div class="row">
+                    <div class="col-6">
+                      <img src="static/ex_bipartite.png" alt="example bipartite graph" style="width: inherit; ">
+                    </div>
+                    <div class="col-6">
+                      The input would look like this:
+                      <br>
+                      4 3
+                      <br>
+                      17 2 5
+                      <br>
+                      13 7 9
+                      <br>
+                      0 6 10
+                      <br>
+                      0 0 8
+                    </div>
+                  </div>
+                  <br><br>
+                </div>
+              </div>
+            </div>
+          </div>
+          <textarea class="form-control" id="input-area" rows="8" style="font-size: 1.2em;">3 3
+            7 3 4
+            8 8 2
+            7 3 1</textarea>
+          <button type="submit" id="start-btn" class="btn btn-block" onclick="event.preventDefault(); submit_input();">
+            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="#E7D3CC" class="bi bi-arrow-down"
+              viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+                d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z" />
+            </svg></button>
+      </form>
+    </div>
+  </div>
+  <div class="row" id="algo-div" hidden>
+
+    <div class="col-6">
+      <svg width="1000" height="90vh">
+        <defs>
+          <marker id="endarrow" markerWidth="3" markerHeight="3" refX="0" refY="1.5" orient="auto"
+            markerUnits="strokeWidth">
+            <polygon points="0 0, 3 1.5, 0 3" />
+          </marker>
+        </defs>
+        <g id="graph"></g>
+      </svg>
+    </div>
+    <div class="col-6">
+      <div id="ctrl-buttons-div">
+        <button type="button" class="btn ctrl-btn" onclick="to_start();"><i
+            class="bi bi-skip-start-circle-fill"></i></button>
+        <button type="button" class="btn ctrl-btn" onclick="prev();"><i
+            class="bi bi-arrow-left-circle-fill"></i></button>
+        <button type="button" class="btn ctrl-btn" onclick="next();"><i
+            class="bi bi-arrow-right-circle-fill"></i></button>
+        <button type="button" class="btn ctrl-btn" onclick="to_end();"><i
+            class="bi bi-skip-end-circle-fill"></i></button>
+      </div>
+      <div>
+        <input type="range" class="form-range" id="state-slider" data-toggle="popover" onchange="handle_slider()">
+      </div>
+      <br>
+      <div class="card-body card" id="explanations-card">
+        <p id="explanations"></p>
+      </div>
+    </div>
+  </div>
+  <hr id="footer-hr">
+  <footer class="text-center text-white" style="background-color: #e7d3cc;">
+    <div class="container">
+      <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="https://www.linkedin.com/in/claireyang/"
+        role="button" data-mdb-ripple-color="#934474"><i class="bi bi-linkedin footer-btn"></i></a>
+      <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="https://github.com/apluscs" role="button"
+        data-mdb-ripple-color="#934474"><i class="bi bi-github footer-btn"></i></a>
+    </div>
+    <div class="text-center text-dark p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License"
+          style="border-width:0;" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
+      <p style="color:#29001f; padding-top: 10px;">This work is licensed under a
+        <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="color:#5e1647">
+          Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
+        </a>.
+      </p>
+
+    </div>
+  </footer>
+</body>
+
 </html>
