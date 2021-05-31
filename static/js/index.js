@@ -12,7 +12,7 @@ const EXPL_HTML = ["Current value of the matching: %value",
 
 function create_circle(cx, cy, i) {
   let circle = document.createElementNS(SVG_NS, 'circle');
-  setAttributes(circle, { "id": i, "cx": cx, "cy": cy, "r": r, "stroke": "#5e1647", "stroke-width": 0.1 * r, "fill": "#934474" });
+  setAttributes(circle, { "id": i, "cx": cx, "cy": cy, "r": r, "stroke": "#5e1647", "stroke-width": 0.1 * r, "fill": "#934474", "data-toggle": "popover" });
   return circles[i] = circle;
 }
 
@@ -22,7 +22,7 @@ function create_line(i, j) {
   var cl1 = circles[i], cl2 = circles[j];
   // console.log(cl1, cl2);
   let line = document.createElementNS(SVG_NS, 'path');
-  setAttributes(line, { "d": `M ${cl1.getAttribute("cx")} ${cl1.getAttribute("cy")} L ${cl2.getAttribute("cx")} ${cl2.getAttribute("cy")}`, "r": r, "stroke": "grey", "stroke-width": 0.1 * r, "stroke": "#29001f", "stroke-dasharray": "10 5", "class": "dashed-edge", "data-toggle": "popover" });
+  setAttributes(line, { "d": `M ${cl1.getAttribute("cx")} ${cl1.getAttribute("cy")} L ${cl2.getAttribute("cx")} ${cl2.getAttribute("cy")}`, "r": r, "stroke": "grey", "stroke-width": 0.1 * r, "stroke": "#29001f", "stroke-dasharray": "10 5", "class": "dashed-edge", "data-toggle": "popover", "data-title": "Weight: " + wts[i][j] });
   return edges[i][j] = edges[j][i] = line;
 }
 
@@ -31,15 +31,19 @@ function create_edge_label(i, j, wt) {
   let dy = y2 - y1, dx = x2 - x1, a = Math.atan(dy / dx) * 180 / Math.PI;;
   let fs = r / Math.max(n, m), x = x1 + r * 1.1, y = y1 + r * 1.1 * dy / dx - fs / 2;
   // console.log(x, y, x1, y1);
-  setAttributes(text, { "x": x, "y": y, "font-size": fs, "transform": `rotate(${a}, ${x}, ${y})`, "fill": "#A06454", "class": "edge-label", "data-toggle": "popover" });
+  setAttributes(text, { "x": x, "y": y, "font-size": fs, "transform": `rotate(${a}, ${x}, ${y})`, "fill": "#A06454", "class": "edge-label" });
   text.innerHTML = wt;
   return text;
 }
 
-function create_label(i, lab, shift_left) {
-  let text = document.createElementNS(SVG_NS, 'text'), x = Number(circles[i].getAttribute("cx")), y = Number(circles[i].getAttribute("cy")), fs = r / String(lab).length;
-  if (shift_left) x -= r / 2;
-  setAttributes(text, { "x": x, "y": y, "font-size": fs, "fill": "#e7d3cc", "class": "node-label", "data-toggle": "popover" });
+function get_fs(lab) {
+  return r / String(lab).length *.9;
+}
+function create_label(i, lab, shift_left, is_new = false) {
+  let text = document.createElementNS(SVG_NS, 'text'), x = Number(circles[i].getAttribute("cx")), y = Number(circles[i].getAttribute("cy")), fs = get_fs(lab), pre_id = "label_";
+  if (shift_left) x -= r / 2 * 1.5;
+  if (is_new) y += fs * .8, pre_id = "new_label_";
+  setAttributes(text, { "x": x, "y": y, "font-size": fs, "fill": "#e7d3cc", "class": "node-label", "data-toggle": "popover", "id": pre_id + i });
   text.innerHTML = lab;
   return text;
 }
@@ -65,18 +69,6 @@ function render_graph(st) { // same thing as rendering  default state
     }
   }
   to_start();
-  $('.node-label').popover({  // all these popovers need to be added only once, never adjusted
-    title: "Label",
-    trigger: "hover",
-    content: "The labeling for this node. At all times and for all edges (i, j), label[i] + label[j] &ge; weight[i][j].",
-    html: true
-  });
-  $('.edge-label').popover({
-    title: "Weight",
-    trigger: "hover",
-    content: "This is the weight of this edge.",
-    html: true
-  });
   $('#state-slider').popover({
     title: "State Slider",
     trigger: "hover",
@@ -156,7 +148,14 @@ function render_path(st) {
 }
 
 function render_new_labels(st) {
-
+  var new_labels = st.new_labels, labels = st.labels;
+  // console.log(new_labels);
+  for (i = 1; i <= N; ++i) {
+    if (labels[i] == new_labels[i]) continue;
+    var label = document.getElementById("label_" + i), lab = st.new_labels[i], fs = get_fs(lab);
+    setAttributes(label, { "text-decoration": "line-through", "opacity": "0.5", "font-size": fs });
+    graph.appendChild(create_label(i, lab, i <= n, true));
+  }
 }
 
 function clear_other_states() {
@@ -177,6 +176,12 @@ function clear_other_states() {
         setAttributes(e, { "stroke-dasharray": 0, "class": "solid-edge", "data-toggle": "popover" });
     }
   }
+  for (i = 1; i <= N; ++i) {
+    var label = document.getElementById("label_" + i), new_label = document.getElementById("new_label_" + i);
+    if (new_label == null) continue;
+    label.innerHTML = new_label.innerHTML, new_label.remove();
+    setAttributes(label, { "text-decoration": "", "opacity": "1", "font-size": new_label.getAttribute("font-size") });
+  }
 }
 
 function render_interstitial(st) {
@@ -191,6 +196,7 @@ function render_step(st) {
   switch (t) {
     case FOUND_AP:
       render_path(st);
+      break;
     case IMP_LAB:
       expl = expl.replace("%delta", st.d).replace("%delta", st.d);
       render_new_labels(st);
@@ -200,6 +206,8 @@ function render_step(st) {
 
 function render_state() { // based on state_i and in_interstitial
   clear_other_states();
+  var i = state_i * 2 + in_interstitial - 1;
+  $('#state-slider').val(i / (S * 2 - 1) * 100);
   if (state_i == S) {
     display_finish();
     return;
@@ -246,16 +254,14 @@ function to_end() {
 function correct_popovers() {
   $('.dashed-edge').popover('dispose');
   $('.dashed-edge').popover({
-    title: "Dashed Line",
     trigger: "hover",
-    content: "Indicates this edge is <strong>not</strong> in the matching.",
+    content: "Dashes indicate this edge is <strong>not</strong> in the matching.",
     html: true
   });
   $('.solid-edge').popover('dispose');
   $('.solid-edge').popover({
-    title: "Solid Line",
     trigger: "hover",
-    content: "Indicates this edge <strong>is</strong> in the matching.",
+    content: "Solid line indicates this edge <strong>is</strong> in the matching.",
     html: true
   });
   $('#delta-icon').popover({
@@ -269,10 +275,19 @@ function correct_popovers() {
     trigger: "hover",
     content: "The equality graph is the subset of edges E' and its set of incident edges. For every edge (i, j) in E', label[i] + label[j] = weight[i][j]. It is the edges that are \"tight\".",
     html: true
-  })
+  });
+  vertices = document.getElementsByClassName('.vertex');
+  for (i = 1; i <= N; ++i) {
+    $('#' + i).popover({
+      title: "Label: " + $("#label_" + i).html(),
+      trigger: "hover",
+      content: "The labeling for this node. At all times and for all edges (i, j), label[i] + label[j] &ge; weight[i][j].",
+      html: true
+    });
+  }
 }
 
-function handle_slider() {
+function read_slider() {
   i = Math.floor($('#state-slider').prop("value") / 100 * (S * 2 - 1));
   in_interstitial = 1 - i % 2, state_i = Math.floor(i / 2) + i % 2;
   // console.log(i, in_interstitial, state_i)

@@ -132,10 +132,7 @@ def hungarian():
 
 
 if __name__ == '__main__':
-  # This is used when running locally only. When deploying to Google App
-  # Engine, a webserver process such as Gunicorn will serve the app. This
-  # can be configured by adding an `entrypoint` to app.yaml.
-  app.run(host='127.0.0.1', port=8080, debug=True)
+  app.run(debug=True)
   # states = calc_states(3, 3,
   #             [[0, 0, 0, 7, 3, 4], [0, 0, 0, 8, 8, 2], [0, 0, 0, 7, 3, 1],
   #              [7, 8, 7, 0, 0, 0], [3, 8, 3, 0, 0, 0], [4, 2, 1, 0, 0, 0]])

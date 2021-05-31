@@ -61,13 +61,16 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                  The first line should contain two positive integers: the number of nodes in the left subgraph (n) and the right
+                  The first line should contain two positive integers: the number of nodes in the left subgraph (n) and
+                  the right
                   subgraph (m) respectively. They should be space-separated, as with everything else in the input.
                   <br>
-                  Then, the adjacency matrix should come next: the next n lines should contain m integers each, where the
+                  Then, the adjacency matrix should come next: the next n lines should contain m integers each, where
+                  the
                   j<sup>th</sup> number in the i<sup>th</sup> line is the weight of the edge from the i<sup>th</sup>
                   vertex in the left subgraph to the j<sup>th</sup> vertex in the right subgraph. If there is no edge
-                  between two vertices in your graph, give that edge a weight of 0. All numbers should be in the range [0, 2<sup>31</sup>).
+                  between two vertices in your graph, give that edge a weight of 0. All numbers should be in the range
+                  [0, 2<sup>31</sup>).
                   <br><br>
                   <p class="lead">
                     To represent this graph:
@@ -95,10 +98,7 @@
               </div>
             </div>
           </div>
-          <textarea class="form-control" id="input-area" rows="8" style="font-size: 1.2em;">3 3
-            7 3 4
-            8 8 2
-            7 3 1</textarea>
+          <textarea class="form-control" id="input-area" rows="8" style="font-size: 1.2em;"></textarea>
           <button type="submit" id="start-btn" class="btn btn-block" onclick="event.preventDefault(); submit_input();">
             <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="#E7D3CC" class="bi bi-arrow-down"
               viewBox="0 0 16 16">
@@ -133,7 +133,7 @@
             class="bi bi-skip-end-circle-fill"></i></button>
       </div>
       <div>
-        <input type="range" class="form-range" id="state-slider" data-toggle="popover" onchange="handle_slider()">
+        <input type="range" class="form-range" id="state-slider" data-toggle="popover" onchange="read_slider()">
       </div>
       <br>
       <div class="card-body card" id="explanations-card">
