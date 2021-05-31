@@ -1,4 +1,4 @@
-# hungarian-visual
+# Hungarian Algorithm Simulator
 
 Simulating the Hungarian Algorithm (graph version!).
 
